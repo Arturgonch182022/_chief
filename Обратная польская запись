@@ -1,0 +1,101 @@
+#include <iostream>
+#include <string>
+#include <functional>
+#include <vector>
+#include <map>
+#include <cctype>
+#include <stack>
+using namespace std;
+
+int main()
+{
+    string primer;
+    string ans;
+    stack < char > steck;
+    getline(cin, primer);
+
+    for ( int i = 0; i < primer.size(); i++) {
+        if (isdigit(primer[i])) {
+            ans += primer[i];
+            ans += " ";
+        } else if (primer[i] == '(') {
+            steck.push(primer[i]);
+        } else if (primer[i] == ')') {
+            while (steck.top() != '(') {
+                ans += steck.top();
+                ans += " ";
+                steck.pop();
+            }
+            steck.pop();
+        } else if (primer[i] != ' ') {
+            if (!steck.empty()){
+                int toop = 0;
+                int cur = 0;
+                if (primer[i] == '+' || primer[i] == '-') cur = 1;
+                else cur = 2;
+                if ( steck.top() == '+' || steck.top() == '-') toop = 1; else toop = 2;
+                while (!steck.empty() && toop >= cur  && steck.top()!='(') {
+                    if (steck.top() == '+' || steck.top() == '-') toop = 1; else toop = 2;
+                    ans += steck.top();
+                    ans += " ";
+                    steck.pop();
+
+                }
+            }
+            steck.push(primer[i]);
+        }
+    }
+    while (!steck.empty()) {
+        ans += steck.top();
+        ans += " ";
+        steck.pop();
+    }
+
+    cout << ans << endl;
+
+    map<char, function<int64_t(const int64_t&, const int64_t&)>> operations;
+    operations['+'] = [](const int64_t& a, const int64_t& b)  { return a + b; };
+    operations['-'] = [](const int64_t& a, const int64_t& b)  { return a - b; };
+    operations['*'] = [](const int64_t& a, const int64_t& b)  { return a * b; };
+    operations['/'] = [](const int64_t& a, const int64_t& b)  { return a / b; };
+
+    string expression ;
+    expression = ans;
+    vector<int64_t> stack_;
+    int64_t number = 0;
+    bool flag = true;
+
+    //getline(cin, expression);
+
+    for (const auto& i : expression)
+    {
+        if (isdigit(i))
+        {
+            number *= 10;
+            number += (i - '0');
+            flag = true;
+        }
+        else
+        {
+            if (i != ' ')
+            {
+                int64_t num2 = stack_.back();
+                stack_.pop_back();
+                int64_t num1 = stack_.back();
+                stack_.pop_back();
+
+                stack_.push_back(operations[i](num1, num2));
+                flag = false;
+            }
+            else if (i == ' ' && flag)
+            {
+                stack_.push_back(number);
+                number = 0;
+            }
+        }
+    }
+
+    cout << stack_.back();
+
+    return 0;
+}
