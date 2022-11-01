@@ -1,0 +1,61 @@
+#include <iostream>
+#include <string>
+
+using namespace std;
+
+int main() {
+    //test 541920006300
+
+    string s;
+
+    cin >> s;
+
+    int nech = 0, ch = 0;
+
+    for (int i = 0; i < s.size(); i++) {
+        if (i % 2 == 0) {
+            nech += s[i] - '0';
+        } else ch += s[i] - '0';
+    }
+    nech *= 3;
+
+    int cur = nech + ch;
+
+    cur %= 10;
+
+    cur = 10 - cur;
+
+    string new_s;
+    for (int i = s.size() - 1; i >= 0; i--) {
+        new_s += s[i];
+    }
+
+    new_s += to_string(cur);
+
+    string Neznauka_s = new_s;
+
+    int Nez_nech = 0, Nez_ch = 0;
+
+    for (int i = Neznauka_s.size() - 1; i >= 1; i--) {
+        if (i % 2 == 0) {
+            Nez_nech += Neznauka_s[i] - '0';
+        } else Nez_ch += Neznauka_s[i] - '0';
+    }
+    Nez_nech *= 3;
+
+    Nez_ch += Neznauka_s[12] - '0';
+
+    int Nez_cur = 0;
+
+    Nez_cur = Nez_nech + Nez_ch;
+
+    Nez_cur %= 10;
+
+    if (Nez_cur == 0) { cout << "The code is calculated correctly" << endl; }
+    else {
+        cout << "The code was calculated incorrectly" << endl;
+    }
+
+    return 0;
+}
+
